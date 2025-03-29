@@ -11,7 +11,8 @@ using System.IO;
 using System.Collections;
 using System.Xml.Linq;
 
-#pragma warning disable CS1591 //TODO: Add comments
+#pragma warning disable CS1591 //TODO: Add XML comments
+#pragma warning disable CA1416 //Win platform only //TODO: what to do with Linux..
 
 namespace Pixdata
 {
@@ -38,7 +39,7 @@ namespace Pixdata
 
 
             byte[] sourceBuffer = new byte[sourceData.Stride * sourceData.Height];
-            //TODO: what to do with Linux..
+            
             Marshal.Copy(sourceData.Scan0, sourceBuffer, 0, sourceBuffer.Length);
             sourceImage.UnlockBits(sourceData);
 
@@ -63,23 +64,17 @@ namespace Pixdata
                         // we have 8 as "11110000" so we need to create 2 BuGeReds
                         for (int ix = 0; ix < 2; ix++)
                         {
-
                             if (memoryStream.Position >= memoryStream.Length)
                             {
-                                Console.WriteLine(memoryStream.Position);
+                                Console.WriteLine("Out of bounds Position, investigate!" + memoryStream.Position);
                                 break;
-
                             }
-
                             // is it start or end part
                             isfour = (modi++ % 2) == 0;
                             BuGeRed pixel = new BuGeRed(binaryReader.ReadBytes(bits_per_pixel), isfour);
                             pixelList.Add(pixel);
                         }
-
-
                     }
-
                 }
                 binaryReader.Close();
             }
@@ -89,33 +84,26 @@ namespace Pixdata
 
         public byte[] GetBytesFromBitmap(Bitmap sourceImage)
         {
-
             BitmapData sourceData = sourceImage.LockBits(new Rectangle(0, 0,
                         sourceImage.Width, sourceImage.Height),
                         ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-
-
             byte[] sourceBuffer = new byte[sourceData.Stride * sourceData.Height];
             //TODO: what to do with cloud and Linux..
             Marshal.Copy(sourceData.Scan0, sourceBuffer, 0, sourceBuffer.Length);
             sourceImage.UnlockBits(sourceData);
 
             return sourceBuffer;
-
         }
 
         
         public byte[] GetBytesFromBuGeRedList(int width, int height)
         {
             Bitmap resultBitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-
             BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0,
                         resultBitmap.Width, resultBitmap.Height),
                         ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             byte[] resultBuffer = new byte[resultData.Stride * resultData.Height];
-
-
             Marshal.Copy(resultData.Scan0, resultBuffer, 0, resultBuffer.Length);
 
             //Marshal.Copy(resultBuffer, 0, resultData.Scan0, resultBuffer.Length);
@@ -128,13 +116,11 @@ namespace Pixdata
         public Bitmap GetBitmapFromBuGeRedList( int width, int height)
         {
             Bitmap resultBitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-
             BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0,
                         resultBitmap.Width, resultBitmap.Height),
                         ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             byte[] resultBuffer = new byte[resultData.Stride * resultData.Height];
-
             using (MemoryStream memoryStream = new MemoryStream(resultBuffer))
             {
                 memoryStream.Position = 0;
@@ -147,23 +133,19 @@ namespace Pixdata
 
                 binaryWriter.Close();
             }
-
             Marshal.Copy(resultBuffer, 0, resultData.Scan0, resultBuffer.Length);
             resultBitmap.UnlockBits(resultData);
-
             return resultBitmap;
         }
 
         public Bitmap CreateBitmapFromBuGeRedList(List<BuGeRed> bgrlist , int width, int height)
         {
             Bitmap resultBitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-
             BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0,
                         resultBitmap.Width, resultBitmap.Height),
                         ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             byte[] resultBuffer = new byte[resultData.Stride * resultData.Height];
-
             using (MemoryStream memoryStream = new MemoryStream(resultBuffer))
             {
                 memoryStream.Position = 0;
@@ -174,7 +156,6 @@ namespace Pixdata
                     var px = pixel.ToBytes();
                     binaryWriter.Write(px);
                 }
-
                 binaryWriter.Close();
             }
 
@@ -224,7 +205,7 @@ namespace Pixdata
             {
                 //break;
             }
-            if (pixelList?.GetEnumerator().Current?.IsFirstFour.Value != true)
+            if (pixelList?.GetEnumerator().Current?.IsFirstFour != true)
             {
                 int? nxt = pixelList?.IndexOf(pixelList?.GetEnumerator().Current);
                 if (nxt is not null && nxt != -1)
@@ -311,7 +292,6 @@ namespace Pixdata
             {
                 if (bgr != null && bgr.IsFirstFour != null)
                 {
-
                     if ( bgr.IsFirstFour.Value)
                     {
                         yield return bgr;

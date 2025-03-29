@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+#pragma warning disable CS1591 //TODO: Add XML comments
+#pragma warning disable CA1416 //Win platform only //TODO: what to do with Linux..
+
 namespace Pixdata
 {
 
@@ -46,7 +49,6 @@ namespace Pixdata
         /// Init from string
         /// </summary>
         /// <param name="bitstring">Should be four or 8 chars</param>
-        /// <param name="firstFour">Is bitstring four or 8 chars</param>
         public BuGeRed(string bitstring)
         {
             if (bitstring.Length == 4 || bitstring.Length == 8)
@@ -117,6 +119,7 @@ namespace Pixdata
         /// Init from byte array
         /// </summary>
         /// <param name="barr"></param>
+        /// <param name="firstFour">Is bitstring four or 8 chars</param>
         public BuGeRed(byte[] barr, bool? firstFour)
         {
             this.Blue = barr[0];
@@ -157,7 +160,7 @@ namespace Pixdata
             int red = Convert.ToInt32(basebgr.Red - this.Red);
             int green = Convert.ToInt32(basebgr.Green - this.Green);
             int blue = Convert.ToInt32(basebgr.Blue - this.Blue);
-            string test = $"{Math.Abs(green)}{Math.Abs(blue)}{Math.Abs(red)}{Math.Abs(alpha)}";
+            //string test = $"{Math.Abs(green)}{Math.Abs(blue)}{Math.Abs(red)}{Math.Abs(alpha)}";
             return string.Format($"{Math.Abs(blue)}{Math.Abs(green)}{Math.Abs(red)}{Math.Abs(alpha)}");
         }
 
@@ -177,7 +180,6 @@ namespace Pixdata
         // TODO: what if rgb is 255 - add rule (max 253) to start checks of original Bitmap validation!
         public static BuGeRed operator + (BuGeRed bgr, BuGeRed addme)
         {
-
             return new BuGeRed(new byte[] { (byte)((byte)bgr.Blue + addme.Blue), (byte)((byte)bgr.Green + addme.Green), 
                 (byte)((byte)bgr.Red + addme.Red), (byte)((byte)bgr.Alpha - addme.Alpha), Convert.ToByte(addme.IsFirstFour) });
         }

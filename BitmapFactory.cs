@@ -1,6 +1,9 @@
 ﻿using Pixdata;
 using System.Drawing;
 
+#pragma warning disable CS1591 //TODO: Add XML comments
+#pragma warning disable CA1416 //Win platform only
+
 namespace PixMapper
 {
     public interface IBitmapCreator
@@ -17,7 +20,6 @@ namespace PixMapper
     {
         public bool Create(string embedMsg, string bmpFileName, int w, int h, System.Drawing.Color bgColor)
         {
-
             if (embedMsg != null && (embedMsg.Length * 4) + 2 < (w * h))
             {
                 //var fullPath = Path.GetFullPath(bmpFileName);
@@ -26,7 +28,7 @@ namespace PixMapper
                 BuGeRedCreator cr = new BuGeRedCreator(embedMsg, (int)(bgColor.R), (int)bgColor.G, (int)bgColor.B, (int)bgColor.A, h, w);
                 var msgList = cr.CreateMessage();
                 var bitmap = cr.CreateBitmap(msgList);
-                bitmap.Save(bmpFileName);
+                bitmap?.Save(bmpFileName);
             }
             return true;
         }
