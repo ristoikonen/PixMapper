@@ -11,6 +11,8 @@ using System.IO;
 using System.Collections;
 using System.Xml.Linq;
 
+#pragma warning disable CS1591 //TODO: Add comments
+
 namespace Pixdata
 {
     public class BuGeRedCollection : IEnumerable
@@ -36,7 +38,7 @@ namespace Pixdata
 
 
             byte[] sourceBuffer = new byte[sourceData.Stride * sourceData.Height];
-            //TODO: what to do with cloud and Linux..
+            //TODO: what to do with Linux..
             Marshal.Copy(sourceData.Scan0, sourceBuffer, 0, sourceBuffer.Length);
             sourceImage.UnlockBits(sourceData);
 
@@ -52,7 +54,6 @@ namespace Pixdata
                     if (isfirstpixel && memoryStream.Position == 0)
                     {
                         firstpixel = new BuGeRed(binaryReader.ReadBytes(4));
-                        //firstpixel.IsFirstFour = true;
                         pixelList.Add(firstpixel);
                         isfirstpixel = false;
                     }
@@ -69,7 +70,6 @@ namespace Pixdata
                                 break;
 
                             }
-                            //int readix = isfour ? 0 : bits_per_pixel;
 
                             // is it start or end part
                             isfour = (modi++ % 2) == 0;
@@ -104,7 +104,7 @@ namespace Pixdata
 
         }
 
-        //List<BuGeRed> pixelList
+        
         public byte[] GetBytesFromBuGeRedList(int width, int height)
         {
             Bitmap resultBitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
@@ -304,6 +304,7 @@ namespace Pixdata
         }
 
         public IEnumerable<BuGeRed> Marked()
+
         {
             //Range< BuGeRed >
             foreach (BuGeRed bgr in pixelList)

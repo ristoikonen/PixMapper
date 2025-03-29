@@ -79,7 +79,8 @@ namespace Pixdata
 
         public List<BuGeRed> CreateMessageOld()//string embed, Color color)
         {
-            const int bits_per_pixel = 4;
+            //TODO: dynamic sizing of bits to BuGeReds - "1111000" so we need to create 2 BuGeReds 
+            //const int BuGeRed_into_bits = 2;
             UsAsciiIMap map = new UsAsciiIMap();
             BuGeRedCollection bgrcoll = new BuGeRedCollection();
 
